@@ -1,3 +1,7 @@
+## Why
+I wanted to try socket.io and Next.js for a while so...
+![Why not both](http://i.imgur.com/IdQ5FQF.png)
+
 ## Specs
 AC
 * 0.1.0
