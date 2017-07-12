@@ -1,0 +1,4 @@
+.idea/*
+fe/node_modules
+fe/.next
+gameserver/node_modules
