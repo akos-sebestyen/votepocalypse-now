@@ -7,15 +7,11 @@ AC
     
     
 ## Setup
-* fe
-
-
+### fe
     $ yarn
     $ yarn dev
     
-* gameserver
-
-
+### gameserver
     $ yarn
     $ yarn start
     
