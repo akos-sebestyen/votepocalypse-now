@@ -15,6 +15,7 @@ export default class Room extends React.Component {
         this.onRoomJoined = this.onRoomJoined.bind(this);
         this.onRoomNotFound = this.onRoomNotFound.bind(this);
         this.onPlayersUpdated = this.onPlayersUpdated.bind(this);
+        this.getCurrentPlayer = this.getCurrentPlayer.bind(this);
     }
 
     onRoomJoined({players}){
@@ -28,6 +29,10 @@ export default class Room extends React.Component {
 
     onPlayersUpdated({players}){
         this.setState(Object.assign({}, this.state, {players}));
+    }
+
+    getCurrentPlayer(){
+        return this.state.players.find((player) => player.playerId === this.state.currentPlayerId);
     }
 
     componentDidMount(){
@@ -58,8 +63,11 @@ export default class Room extends React.Component {
                 <ul>
                     {this.state.players.map((player) => {
                         const itemStyle = {};
+
                         if(this.state.currentPlayerId === player.playerId)
                             itemStyle.backgroundColor = "#b2cfff";
+                        if(!player.hasJoined)
+                            itemStyle.opacity = 0.4;
                         return (<li style={itemStyle} key={player.playerId}>{player.playerName}</li>)
                     })}
                 </ul>

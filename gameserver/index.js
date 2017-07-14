@@ -1,8 +1,8 @@
 const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const uuidv4 = require('uuid/v4');
 const rooms = require('./rooms');
+const roomGenerator = require('./roomGenerator');
 
 class Room{
     constructor(roomId){
@@ -15,6 +15,7 @@ class Player{
     constructor(playerId, playerName){
         this.playerId = playerId;
         this.playerName = playerName;
+        this.hasJoined = false;
     }
 }
 
@@ -29,7 +30,7 @@ io.on('connection', function(socket){
     const createRoom = (playerName) => {
         console.log(playerName);
 
-        const roomId = uuidv4();
+        const roomId = roomGenerator.generateName();
 
         socket.join(roomId);
 
@@ -72,6 +73,17 @@ io.on('connection', function(socket){
         socket.to(roomId).emit('PLAYERS_UPDATED', {players: Array.from(room.players.values())})
     };
 
+    const onNameConfirmed = ({roomId}) => {
+        const room = rooms[roomId];
+        if(!room) return;
+
+        const player = room.players.get(socket.id);
+
+        player.hasJoined = true;
+        console.log('player joined', roomId);
+        socket.to(roomId).emit('PLAYERS_UPDATED', {players: Array.from(room.players.values())})
+    };
+
     socket.on('disconnect', function(){
         console.log('user disconnected');
 
@@ -89,7 +101,7 @@ io.on('connection', function(socket){
     socket.on('CREATE_ROOM', createRoom);
     socket.on('JOIN_ROOM', joinRoom);
     socket.on('NAME_UPDATED', onNameUpdated);
-
+    socket.on('NAME_CONFIRMED', onNameConfirmed);
 });
 
 http.listen(3001, function(){

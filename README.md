@@ -11,9 +11,9 @@ AC
     * ✔ lists people's names in room
 * 0.1.1
     * ✔ highlight current users name
-    * denote users who are mid join
-    * highlight which users have joined the room
-    * shorten room ids
+    * ✔ denote users who are mid join
+    * ✔ highlight which users have joined the room
+    * ✔ shorten room ids
     
 * 0.2.0  
     * joined users can toggle ready check

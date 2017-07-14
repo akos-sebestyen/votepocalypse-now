@@ -22,7 +22,8 @@ export default class Create extends React.Component {
         Router.push({
             pathname: '/room',
             query: {r: stateService.roomId}
-        })
+        });
+        stateService.socket.emit('NAME_CONFIRMED', {roomId: stateService.roomId});
     }
 
     onNameChange(e){
