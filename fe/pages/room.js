@@ -1,14 +1,15 @@
 import io from 'socket.io-client';
 import React from 'react';
 import Router from 'next/router'
-import socketService from '../service'
+import stateService from '../service'
 
 export default class Room extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             roomId: props.url.query.r,
-            players: []
+            players: [],
+            currentPlayerId: stateService.currentPlayer ? stateService.currentPlayer.playerId : null
         };
 
         this.onRoomJoined = this.onRoomJoined.bind(this);
@@ -35,17 +36,17 @@ export default class Room extends React.Component {
             return;
         }
 
-        socketService.socket.emit('JOIN_ROOM', {roomId: this.state.roomId, playerName: socketService.playerName});
+        stateService.socket.emit('JOIN_ROOM', {roomId: this.state.roomId, playerName: stateService.playerName});
 
-        socketService.socket.on('ROOM_JOINED', this.onRoomJoined);
-        socketService.socket.on('ROOM_NOT_FOUND', this.onRoomNotFound);
-        socketService.socket.on('PLAYERS_UPDATED', this.onPlayersUpdated);
+        stateService.socket.on('ROOM_JOINED', this.onRoomJoined);
+        stateService.socket.on('ROOM_NOT_FOUND', this.onRoomNotFound);
+        stateService.socket.on('PLAYERS_UPDATED', this.onPlayersUpdated);
     }
 
     componentWillUnmount(){
-        socketService.socket.removeListener('ROOM_JOINED', this.onRoomJoined);
-        socketService.socket.removeListener('ROOM_NOT_FOUND', this.onRoomNotFound);
-        socketService.socket.removeListener('PLAYERS_UPDATED', this.onPlayersUpdated);
+        stateService.socket.removeListener('ROOM_JOINED', this.onRoomJoined);
+        stateService.socket.removeListener('ROOM_NOT_FOUND', this.onRoomNotFound);
+        stateService.socket.removeListener('PLAYERS_UPDATED', this.onPlayersUpdated);
     }
 
     render(){
@@ -55,7 +56,12 @@ export default class Room extends React.Component {
                     <h3>Room {this.state.roomId}</h3>
                 </div>
                 <ul>
-                    {this.state.players.map((player) => <li key={player.playerId}>{player.playerName}</li>)}
+                    {this.state.players.map((player) => {
+                        const itemStyle = {};
+                        if(this.state.currentPlayerId === player.playerId)
+                            itemStyle.backgroundColor = "#b2cfff";
+                        return (<li style={itemStyle} key={player.playerId}>{player.playerName}</li>)
+                    })}
                 </ul>
 
             </div>

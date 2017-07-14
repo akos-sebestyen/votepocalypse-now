@@ -18,7 +18,6 @@ export default class Create extends React.Component {
     }
 
     onSubmit(e){
-        console.log('clicking submit');
         stateService.playerName = this.state.name;
         Router.push({
             pathname: '/room',

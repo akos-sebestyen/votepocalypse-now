@@ -10,7 +10,7 @@ AC
     * ✔ people join a room and enter a name
     * ✔ lists people's names in room
 * 0.1.1
-    * highlight current users name
+    * ✔ highlight current users name
     * denote users who are mid join
     * highlight which users have joined the room
     * shorten room ids

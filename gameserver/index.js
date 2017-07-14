@@ -51,12 +51,14 @@ io.on('connection', function(socket){
 
         // only really join the room as a player if there is a player name
         const isPlayerJoin = playerName === "";
+        let currentPlayer;
         if(isPlayerJoin){
-            room.players.set(socket.id, new Player(socket.id, playerName));
+            currentPlayer = new Player(socket.id, playerName);
+            room.players.set(socket.id, currentPlayer);
         }
 
         socket.join(roomId);
-        socket.emit('ROOM_JOINED', {isPlayerJoin, players: Array.from(room.players.values())});
+        socket.emit('ROOM_JOINED', {isPlayerJoin, currentPlayer, players: Array.from(room.players.values())});
     };
 
     const onNameUpdated = ({roomId, name}) => {

@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import React from 'react';
 import Router from 'next/router'
-import socketService from '../service'
+import stateService from '../service'
 
 export default class Home extends React.Component {
     constructor(props){
@@ -18,35 +18,36 @@ export default class Home extends React.Component {
     }
 
     componentDidMount(){
-        socketService.socket.on('ROOM_CREATED', this.onRoomCreated);
-        socketService.socket.on('ROOM_JOINED', this.onRoomJoined);
+        stateService.socket.on('ROOM_CREATED', this.onRoomCreated);
+        stateService.socket.on('ROOM_JOINED', this.onRoomJoined);
     }
 
     componentWillUnmount(){
-        socketService.socket.removeListener('ROOM_CREATED', this.onRoomCreated);
-        socketService.socket.removeListener('ROOM_JOINED', this.onRoomJoined);
+        stateService.socket.removeListener('ROOM_CREATED', this.onRoomCreated);
+        stateService.socket.removeListener('ROOM_JOINED', this.onRoomJoined);
     }
 
     onRoomCreated(payload){
-        socketService.roomId = payload;
+        stateService.roomId = payload;
         Router.push({
             pathname: '/room',
             query: {r:payload}
         })
     }
 
-    onRoomJoined({isPlayerJoin}){
+    onRoomJoined({isPlayerJoin, currentPlayer}){
         if(!isPlayerJoin) return;
-        socketService.roomId = this.state.roomId;
+        stateService.roomId = this.state.roomId;
+        stateService.currentPlayer = currentPlayer;
         Router.push('/enter-name');
     }
 
     onCreate(e){
-        socketService.socket.emit('CREATE_ROOM');
+        stateService.socket.emit('CREATE_ROOM');
     }
 
     onSubmit(e){
-        socketService.socket.emit('JOIN_ROOM', {roomId: this.state.roomId, playerName:""})
+        stateService.socket.emit('JOIN_ROOM', {roomId: this.state.roomId, playerName:""})
     }
 
     onRoomIdInputChange(e){
