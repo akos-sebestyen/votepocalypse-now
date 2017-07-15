@@ -21,7 +21,7 @@ AC
     * when countdown over, game begins
     
 * 0.3.0  
-    * ✔ * 0.5 refactor into handlers
+    * ✔ refactor into handlers
     * implement start game button that updates game state across all clients
     
 * 1.0 

@@ -1,15 +1,10 @@
 const rooms = require('./rooms');
 const roomGenerator = require('./roomGenerator');
-const Room = require('./room');
-const Player = require('./player');
-const Game = require('./game');
 
-
-// TODO NOT DONE YET.
-// todo figure out a clever way to hook into this handler from the other handler that makes sense...
 module.exports = class RoomHandler{
-    constructor(socket){
+    constructor(socket, room){
         this.socket = socket;
+        this.room = room;
 
         this.socket.on('NAME_UPDATED', this.onNameUpdated.bind(this));
         this.socket.on('NAME_CONFIRMED', this.onNameConfirmed.bind(this));

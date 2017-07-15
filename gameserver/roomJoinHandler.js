@@ -3,16 +3,15 @@ const roomGenerator = require('./roomGenerator');
 const Room = require('./room');
 const Player = require('./player');
 const Game = require('./game');
+const RoomHandler = require('./roomHandler');
 
 module.exports = class RoomJoinHandler{
     constructor(socket){
         this.socket = socket;
+        this._roomHandler = null;
 
         this.socket.on('CREATE_ROOM', this.createRoom.bind(this));
         this.socket.on('JOIN_ROOM', this.joinRoom.bind(this));
-        this.socket.on('NAME_UPDATED', this.onNameUpdated.bind(this));
-        this.socket.on('NAME_CONFIRMED', this.onNameConfirmed.bind(this));
-        this.socket.on('REQUEST_GAME_START', this.onRequestGameStart.bind(this));
         this.socket.on('disconnect', this.onUserDisconnection.bind(this));
     }
 
@@ -62,32 +61,9 @@ module.exports = class RoomJoinHandler{
         }
 
         this.socket.join(roomId);
+
+        if(!this._roomHandler) this._roomHandler = new RoomHandler(this.socket, room);
+
         this.socket.emit('ROOM_JOINED', {isPlayerJoin, currentPlayer, players: Array.from(room.players.values())});
-    };
-
-    onNameUpdated({roomId, name}){
-        const room = rooms[roomId];
-        if(!room) return;
-
-        const player = room.players.get(this.socket.id);
-
-        player.playerName = name;
-        console.log('name updated', roomId, name);
-        this.socket.to(roomId).emit('PLAYERS_UPDATED', {players: Array.from(room.players.values())})
-    };
-
-    onNameConfirmed({roomId}){
-        const room = rooms[roomId];
-        if(!room) return;
-
-        const player = room.players.get(this.socket.id);
-
-        player.hasJoined = true;
-        console.log('player joined', roomId);
-        this.socket.to(roomId).emit('PLAYERS_UPDATED', {players: Array.from(room.players.values())})
-    };
-
-    onRequestGameStart(){
-
     };
 };
