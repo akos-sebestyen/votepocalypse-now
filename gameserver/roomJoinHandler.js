@@ -36,7 +36,9 @@ module.exports = class RoomJoinHandler{
 
         this.socket.join(roomId);
 
-        const room = new Room(roomId, new Game());
+        const game = new Game();
+        const room = new Room(roomId, game);
+        game.room = room;
 
         rooms[roomId] = room;
         console.log(rooms);
@@ -62,8 +64,12 @@ module.exports = class RoomJoinHandler{
 
         this.socket.join(roomId);
 
-        if(!this._roomHandler) this._roomHandler = new RoomHandler(this.socket, room);
+        if(!this._roomHandler) {
+            this._roomHandler = new RoomHandler(this.socket, room);
+        } else {
+            this._roomHandler.room = room;
+        }
 
-        this.socket.emit('ROOM_JOINED', {isPlayerJoin, currentPlayer, players: Array.from(room.players.values())});
+        this.socket.emit('ROOM_JOINED', this._roomHandler.getClientGameState());
     };
 };

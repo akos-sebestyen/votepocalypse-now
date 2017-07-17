@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start"
   },
+  "engines" : { "node" : "7.10.1" },
   "dependencies": {
     "next": "beta",
     "react": "^15.6.1",

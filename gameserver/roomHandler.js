@@ -11,6 +11,23 @@ module.exports = class RoomHandler{
         this.socket.on('REQUEST_GAME_START', this.onRequestGameStart.bind(this));
     }
 
+    get player(){
+        return this.room.players.get(this.socket.id);
+    }
+
+    emitToRoom(type, payload){
+        this.socket.to(this.room.roomId).emit(type, payload);
+        this.socket.emit(type, payload);
+    }
+
+    getClientGameState(){
+        const players = this.room.playersArr;
+        const gameStartDate = this.room.game.gameStartDate;
+        const hasStarted = this.room.game.hasStarted;
+        const currentPlayer = this.room.players.get(this.socket.id);
+        return { players, currentPlayer, gameStartDate, hasStarted };
+    }
+
     onNameUpdated({roomId, name}){
         const room = rooms[roomId];
         if(!room) return;
@@ -30,10 +47,17 @@ module.exports = class RoomHandler{
 
         player.hasJoined = true;
         console.log('player joined', roomId);
-        this.socket.to(roomId).emit('PLAYERS_UPDATED', {players: Array.from(room.players.values())})
+        this.emitToRoom('PLAYERS_UPDATED', {players: room.playersArr});
     };
 
     onRequestGameStart(){
-
+        if(this.room.game.gameStartDate){
+            console.log(`Game start already requested for ${this.room.game.gameStartDate.toISOString()}`);
+            return;
+        }
+        console.log(`${this.player.playerName} wants to start the game`);
+        const gameStart = this.room.game.startGame(() => this.emitToRoom('GAME_STATE_UPDATED', this.getClientGameState()));
+        console.log(`Game starting at ${gameStart.toISOString()}`);
+        this.emitToRoom('GAME_STATE_UPDATED', this.getClientGameState());
     };
 };

@@ -18,6 +18,7 @@ export default class Create extends React.Component {
     }
 
     onSubmit(e){
+        e.preventDefault();
         stateService.playerName = this.state.name;
         Router.push({
             pathname: '/room',
@@ -35,11 +36,11 @@ export default class Create extends React.Component {
     render(){
         return (
             <div>
-                <div>
+                <form onSubmit={this.onSubmit}>
                     <h2>Enter your name</h2>
                     <input placeholder="Enter your name" value={this.state.name} onChange={this.onNameChange} />
-                    <button type="submit" onClick={this.onSubmit} >GO!</button>
-                </div>
+                    <button type="submit">GO!</button>
+                </form>
             </div>
         )
     }

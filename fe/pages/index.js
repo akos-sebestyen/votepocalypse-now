@@ -1,4 +1,3 @@
-import io from 'socket.io-client';
 import React from 'react';
 import Router from 'next/router'
 import stateService from '../service'
@@ -35,8 +34,8 @@ export default class Home extends React.Component {
         })
     }
 
-    onRoomJoined({isPlayerJoin, currentPlayer}){
-        if(!isPlayerJoin) return;
+    onRoomJoined({currentPlayer}){
+        if(!currentPlayer) return;
         stateService.roomId = this.state.roomId;
         stateService.currentPlayer = currentPlayer;
         Router.push('/enter-name');
@@ -47,6 +46,7 @@ export default class Home extends React.Component {
     }
 
     onSubmit(e){
+        e.preventDefault();
         stateService.socket.emit('JOIN_ROOM', {roomId: this.state.roomId, playerName:""})
     }
 
@@ -63,11 +63,11 @@ export default class Home extends React.Component {
                     <h2>Create Room</h2>
                     <button onClick={this.onCreate}>Create</button>
                 </div>
-                <div>
+                <form onSubmit={this.onSubmit}>
                     <h2>Join room</h2>
                     <input type="text" value={this.state.roomId} onChange={this.onRoomIdInputChange} />
-                    <button type="submit" onClick={this.onSubmit}>Join</button>
-                </div>
+                    <button type="submit">Join</button>
+                </form>
             </div>
         )
     }

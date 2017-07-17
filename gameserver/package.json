@@ -2,6 +2,7 @@
   "scripts": {
     "start": "node index"
   },
+  "engines" : { "node" : "7.10.1" },
   "dependencies": {
     "express": "^4.15.3",
     "socket.io": "^2.0.3",
