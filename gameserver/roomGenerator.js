@@ -2,8 +2,8 @@ const fs = require('fs');
 
 class RoomGenerator{
     constructor(){
-        this.nouns = fs.readFileSync('./gameserver/data/noun-list.txt', 'ascii').split('\n');
-        this.adjectives = fs.readFileSync('./gameserver/data/adjective-list.txt', 'ascii').split('\n');
+        this.nouns = fs.readFileSync('./gameserver/data/noun-list.txt', 'ascii').split(/\r?\n/);
+        this.adjectives = fs.readFileSync('./gameserver/data/adjective-list.txt', 'ascii').split(/\r?\n/);
     }
 
     generateName(){

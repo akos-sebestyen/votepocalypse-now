@@ -23,9 +23,9 @@ module.exports = class RoomHandler{
     getClientGameState(){
         const players = this.room.playersArr;
         const gameStartDate = this.room.game.gameStartDate;
-        const hasStarted = this.room.game.hasStarted;
+        const gameState = this.room.game.state;
         const currentPlayer = this.room.players.get(this.socket.id);
-        return { players, currentPlayer, gameStartDate, hasStarted };
+        return { players, currentPlayer, gameStartDate, gameState };
     }
 
     onNameUpdated({roomId, name}){
@@ -55,9 +55,13 @@ module.exports = class RoomHandler{
             console.log(`Game start already requested for ${this.room.game.gameStartDate.toISOString()}`);
             return;
         }
+
+        this.room.game.onGameStateUpdateCb = (action) => {
+            this.emitToRoom('GAME_STATE_UPDATED', action);
+        };
+
         console.log(`${this.player.playerName} wants to start the game`);
-        const gameStart = this.room.game.startGame(() => this.emitToRoom('GAME_STATE_UPDATED', this.getClientGameState()));
-        console.log(`Game starting at ${gameStart.toISOString()}`);
-        this.emitToRoom('GAME_STATE_UPDATED', this.getClientGameState());
+        this.room.game.startGame();
+        console.log(`Game starting at ${this.room.game.state.gameStartDate.toISOString()}`);
     };
 };

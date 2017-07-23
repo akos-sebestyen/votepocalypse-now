@@ -43,9 +43,9 @@ export default class Room extends React.Component {
         stateService.socket.emit('REQUEST_GAME_START');
     }
 
-    onGameStateUpdate({gameStartDate}){
-        console.log('GAME START REQUESTED', gameStartDate);
-        this.setState({gameStartDate});
+    onGameStateUpdate({type, state}){
+        console.log(`Game state update: ${type}`);
+        this.setState(state);
     }
 
     componentDidMount(){
