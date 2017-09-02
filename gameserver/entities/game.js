@@ -1,11 +1,13 @@
 const BaseEntity = require("./baseEntity");
+const Round = require('./round');
 
 class Game extends BaseEntity {
 
     constructor(onGameStateUpdateCb, gameStartDelay){
+        const rounds = [new Round(), new Round()];
         const defaultState = {
+            rounds,
             roundIndex: null,
-            rounds: [],
             hasStarted: false,
             gameStartDate: null
         };
