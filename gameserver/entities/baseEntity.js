@@ -24,6 +24,13 @@ class BaseEntity {
         if(this._postApplyCb) this._postApplyCb({type: action.type, state});
     }
 
+    resetState() {
+        this.state = Object.assign({}, this._defaultState);
+        this._eventHistory.forEach((event) => {
+            this.state = this._reducer(this.state, event);
+        });
+    }
+
     _reducer(state, {type, payload}){
         throw new Error("implement this method");
     }
