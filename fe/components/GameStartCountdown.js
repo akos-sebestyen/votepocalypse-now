@@ -15,7 +15,7 @@ export default class GameStartCountdown extends React.Component {
         if(this._countdownInterval) clearInterval(this._countdownInterval);
         if(!nextProps.gameStartDate) return;
         const gameStartDate = new Date(nextProps.gameStartDate);
-        setInterval(() => {
+        this._countdownInterval = setInterval(() => {
             const timeDiff = gameStartDate.getTime() - new Date().getTime();
 
             if(timeDiff > 0){

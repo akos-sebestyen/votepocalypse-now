@@ -44,7 +44,8 @@ export default class Room extends React.Component {
     }
 
     onGameStateUpdate({type, state}){
-        console.log(`Game state update: ${type}`);
+        console.log(`Game state update:type: ${type}`);
+        console.log(`Game state update:state:`, state);
         this.setState(state);
     }
 
@@ -69,13 +70,25 @@ export default class Room extends React.Component {
         stateService.socket.removeListener('GAME_STATE_UPDATED', this.onGameStateUpdate);
     }
 
+    renderRoundIndicator() {
+        return this.state.hasStarted ? (
+            <div>
+                <h3>Cool Title</h3>
+                <p></p>
+            </div>
+        ) : null
+
+    }
+
     render(){
         return (
             <div>
                 <div>
                     <h3>Room {this.state.roomId}</h3>
                 </div>
-                <div><GameStartCountdown gameStartDate={this.state.gameStartDate}/></div>
+                <div>
+                    {!this.state.hasStarted ? <GameStartCountdown gameStartDate={this.state.gameStartDate}/> : null}
+                </div>
                 <ul>
                     {this.state.players.map((player) => {
                         const itemStyle = {};
@@ -90,6 +103,7 @@ export default class Room extends React.Component {
                 <div>
                     {this.state.currentPlayerId && !this.state.gameStartDate ? (<button onClick={this.onStartGameClick}>Start Game</button>) : undefined}
                 </div>
+                {this.renderRoundIndicator()}
             </div>
         )
     }
