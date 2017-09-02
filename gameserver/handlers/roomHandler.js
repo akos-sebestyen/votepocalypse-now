@@ -1,5 +1,5 @@
-const rooms = require('./rooms');
-const roomGenerator = require('./roomGenerator');
+const rooms = require('../rooms');
+const roomGenerator = require('../roomGenerator');
 
 module.exports = class RoomHandler{
     constructor(socket, room){
@@ -56,7 +56,7 @@ module.exports = class RoomHandler{
             return;
         }
 
-        this.room.game.onGameStateUpdateCb = (action) => {
+        this.room.game.postApplyCb = (action) => {
             this.emitToRoom('GAME_STATE_UPDATED', action);
         };
 

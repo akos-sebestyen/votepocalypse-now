@@ -4,7 +4,7 @@ describe('Game', function() {
     const sinonChai = require("sinon-chai");
     use(sinonChai);
 
-    const Game = require('./game');
+    const Game = require('../entities/game');
 
     let game;
 
@@ -45,7 +45,8 @@ describe('Game', function() {
 
         const spy = sinon.spy(onAction);
 
-        game.onGameStateUpdateCb = spy;
+        game = new Game(spy, 50);
+
         game.startGame(() => {
             expect(spy).to.have.been.calledTwice;
             cb();

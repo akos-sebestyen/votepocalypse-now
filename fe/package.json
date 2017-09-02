@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next"
   },
   "engines" : { "node" : "7.10.1" },
   "dependencies": {

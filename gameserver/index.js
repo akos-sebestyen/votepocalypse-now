@@ -3,7 +3,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const rooms = require('./rooms');
 const roomGenerator = require('./roomGenerator');
-const RoomJoinHandler = require('./roomJoinHandler');
+const RoomJoinHandler = require('./handlers/roomJoinHandler');
 
 app.get('/', function(req, res){
     res.send("hello world");

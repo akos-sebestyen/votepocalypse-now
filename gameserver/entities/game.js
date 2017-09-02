@@ -1,31 +1,20 @@
-class Game{
+const BaseEntity = require("./baseEntity");
+
+class Game extends BaseEntity {
 
     constructor(onGameStateUpdateCb, gameStartDelay){
-        this.hasStarted = false;
-        this.onGameStateUpdateCb = onGameStateUpdateCb;
-
-        this._startDelay  = gameStartDelay || 15000;
-        this._defaultState = {
+        const defaultState = {
             roundIndex: null,
             rounds: [],
             hasStarted: false,
             gameStartDate: null
         };
 
-        this._eventHistory = [];
+        super(defaultState, onGameStateUpdateCb);
+
+        this._startDelay  = gameStartDelay || 15000;
 
         this.state = Object.assign({}, this._defaultState);
-    }
-
-    get eventHistory(){
-        return this._eventHistory.slice(0);
-    }
-
-    applyEvent(action){
-        this._eventHistory.push(Object.assign(action, {timestamp: new Date()}));
-        const state = this._gameStateReducer(this.state, action);
-        this.state = state;
-        if(this.onGameStateUpdateCb) this.onGameStateUpdateCb({type: action.type, state});
     }
 
     startGame(cb){
@@ -42,7 +31,7 @@ class Game{
         });
     }
 
-    _gameStateReducer(state, {type, payload}){
+    _reducer(state, {type, payload}){
         switch(type){
             case Game.EventType.REQUEST_START_GAME:
                 return Object.assign({}, state, {gameStartDate: payload.gameStartDate});

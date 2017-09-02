@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "node index"
+  "start": "node index",
+    "test": "mocha"
   },
   "engines": {
     "node": "7.10.1"
