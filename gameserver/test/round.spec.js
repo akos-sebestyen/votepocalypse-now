@@ -7,9 +7,11 @@ describe('Round', function() {
     const Round = require('../entities/round');
 
     let round;
+    let votingPlayerIds;
 
     beforeEach(() => {
         round = new Round();
+        votingPlayerIds = ["player2", "player3", "player4", "player5"];
     });
 
     it('provide a history of round events', () => {
@@ -34,7 +36,7 @@ describe('Round', function() {
 
         round = new Round(spyCb, 5, 5);
 
-        round.startRound(askingPlayerId);
+        round.startRound(askingPlayerId, votingPlayerIds);
     };
 
     const setQuestion = (onAction, option1, option2) => {
@@ -83,13 +85,14 @@ describe('Round', function() {
         setQuestion(onAction, option1, option2);
     });
 
-    it('set a should start and end voting', (cb) => {
+    it('set a should begin voting and end when everyone has voted', (cb) => {
         const option1 = "eat a hamburger";
         const option2 = "eat a hotdog";
 
         const onAction = ({type, state}) => {
             if (type === Round.EventType.BEGIN_VOTING) {
                 expect(state.canVote).to.eql(true);
+                votingPlayerIds.forEach((player) => round.castVote(player, "option1"));
             }
 
             if (type === Round.EventType.END_VOTING) {
@@ -106,14 +109,128 @@ describe('Round', function() {
 
         const onAction = ({type, state}) => {
             if (type === Round.EventType.BEGIN_VOTING) {
-                round.castVote("player2", "option1");
-                round.castVote("player3", "option1");
-                round.castVote("player4", "option2");
+                round.castVote(votingPlayerIds[0], "option1");
+                round.castVote(votingPlayerIds[1], "option1");
+                round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[3], "option1");
             }
 
             if (type === Round.EventType.END_VOTING) {
                 const votes = round.eventHistory.filter((event) => event.type === Round.EventType.CAST_VOTE);
-                expect(votes).to.have.length(3);
+                expect(votes).to.have.length(4);
+                cb();
+            }
+        };
+
+        setQuestion(onAction, option1, option2);
+    });
+
+    it('be able to determine winner correctly if everyone votes once', (cb) => {
+        const option1 = "eat a hamburger";
+        const option2 = "eat a hotdog";
+
+        const onAction = ({type, state}) => {
+            if (type === Round.EventType.BEGIN_VOTING) {
+                round.castVote(votingPlayerIds[0], "option1");
+                round.castVote(votingPlayerIds[1], "option1");
+                round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[3], "option1");
+            }
+
+            if (type === Round.EventType.END_VOTING) {
+                expect(round.getWinningOption()).to.eql("option1");
+                cb();
+            }
+        };
+
+        setQuestion(onAction, option1, option2);
+    });
+
+    it('be able to determine a tie', (cb) => {
+        const option1 = "eat a hamburger";
+        const option2 = "eat a hotdog";
+
+        const onAction = ({type, state}) => {
+            if (type === Round.EventType.BEGIN_VOTING) {
+                round.castVote(votingPlayerIds[0], "option1");
+                round.castVote(votingPlayerIds[1], "option1");
+                round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[3], "option2");
+            }
+
+            if (type === Round.EventType.END_VOTING) {
+                expect(round.getWinningOption()).to.eql("tie");
+                cb();
+            }
+        };
+
+        setQuestion(onAction, option1, option2);
+    });
+
+    it('be able to determine winner even if people vote multiple times', (cb) => {
+        const option1 = "eat a hamburger";
+        const option2 = "eat a hotdog";
+
+        const onAction = ({type, state}) => {
+            if (type === Round.EventType.BEGIN_VOTING) {
+                round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[0], "option1");
+                round.castVote(votingPlayerIds[3], "option1");
+                round.castVote(votingPlayerIds[1], "option1");
+                round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[2], "option2");
+            }
+
+            if (type === Round.EventType.END_VOTING) {
+                expect(round.getWinningOption()).to.eql("option1");
+                cb();
+            }
+        };
+
+        setQuestion(onAction, option1, option2);
+    });
+
+    it('be able to determine winning players and losing players', (cb) => {
+        const option1 = "eat a hamburger";
+        const option2 = "eat a hotdog";
+
+        const onAction = ({type, state}) => {
+            if (type === Round.EventType.BEGIN_VOTING) {
+                round.castVote(votingPlayerIds[0], "option1");
+                round.castVote(votingPlayerIds[1], "option1");
+                round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[3], "option1");
+            }
+
+            if (type === Round.EventType.END_VOTING) {
+                expect(round.getWinningPlayers())
+                    .to.have.same.members([votingPlayerIds[0], votingPlayerIds[1], votingPlayerIds[3]]);
+                expect(round.getLosingPlayers())
+                    .to.have.same.members([votingPlayerIds[2]]);
+                cb();
+            }
+        };
+
+        setQuestion(onAction, option1, option2);
+    });
+
+    it('everyone should lose under a tie', (cb) => {
+        const option1 = "eat a hamburger";
+        const option2 = "eat a hotdog";
+
+        const onAction = ({type, state}) => {
+            if (type === Round.EventType.BEGIN_VOTING) {
+                round.castVote(votingPlayerIds[0], "option1");
+                round.castVote(votingPlayerIds[1], "option1");
+                round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[3], "option2");
+            }
+
+            if (type === Round.EventType.END_VOTING) {
+                expect(round.getWinningPlayers()).to.have.length(0);
+                expect(round.getLosingPlayers()).to.have.same.members(votingPlayerIds);
                 cb();
             }
         };
