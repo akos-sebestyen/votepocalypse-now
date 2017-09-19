@@ -69,9 +69,15 @@ module.exports = class RoomHandler{
                 this.emitToRoom('ROUND_UPDATED', {type, state});
             });
 
-            const otherPlayers = this.room.playersArr.filter((player) => player.id !== this.player.id);
+            const otherPlayers = this.room.playersArr.filter((player) => player.playerId !== this.player.playerId);
 
-            currentRound.startRound(this.player.id, otherPlayers.map((player) => player.id))
+            const currPlayerId = this.player.playerId;
+            const otherPlayerIds = otherPlayers.map((player) => player.playerId);
+
+            console.log('currPlayerId', currPlayerId);
+            console.log('otherPlayerIds', otherPlayerIds);
+
+            currentRound.startRound(currPlayerId, otherPlayerIds);
         }, Game.EventType.START_GAME);
 
         this.room.game.subscribe('notify-client', ({type, state}) => {

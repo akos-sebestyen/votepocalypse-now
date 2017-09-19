@@ -24,6 +24,7 @@ class Round extends BaseEntity {
     }
 
     startRound(askingPlayerId, restOfPlayers, cb) {
+        if(!askingPlayerId) throw new Error('must have an asking player at least');
         setTimeout(() => {
             this.applyEvent({type: Round.EventType.START_ROUND});
             if(cb) cb();

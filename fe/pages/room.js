@@ -3,6 +3,7 @@ import React from 'react';
 import Router from 'next/router'
 import stateService from '../service'
 import GameStartCountdown from '../components/GameStartCountdown';
+import RoundContainer from "../components/RoundContainer";
 
 export default class Room extends React.Component {
     constructor(props){
@@ -18,6 +19,7 @@ export default class Room extends React.Component {
         this.onRoomNotFound = this.onRoomNotFound.bind(this);
         this.onPlayersUpdated = this.onPlayersUpdated.bind(this);
         this.getCurrentPlayer = this.getCurrentPlayer.bind(this);
+        this.getRoundInfo = this.getRoundInfo.bind(this);
         this.onStartGameClick = this.onStartGameClick.bind(this);
         this.onGameStateUpdate = this.onGameStateUpdate.bind(this);
     }
@@ -54,6 +56,11 @@ export default class Room extends React.Component {
         console.log(`Round update:state:`, state);
     }
 
+    getRoundInfo() {
+        const {roundIndex, roundIds} = this.state;
+        return Object.assign({}, {roundIndex, roundIds});
+    }
+
     componentDidMount(){
         if(!this.state.roomId) {
             Router.push('/');
@@ -66,7 +73,7 @@ export default class Room extends React.Component {
         stateService.socket.on('ROOM_NOT_FOUND', this.onRoomNotFound);
         stateService.socket.on('PLAYERS_UPDATED', this.onPlayersUpdated);
         stateService.socket.on('GAME_STATE_UPDATED', this.onGameStateUpdate);
-        stateService.socket.on('ROUND_UPDATED', this.onRoundUpdated);
+
     }
 
     componentWillUnmount(){
@@ -74,16 +81,6 @@ export default class Room extends React.Component {
         stateService.socket.removeListener('ROOM_NOT_FOUND', this.onRoomNotFound);
         stateService.socket.removeListener('PLAYERS_UPDATED', this.onPlayersUpdated);
         stateService.socket.removeListener('GAME_STATE_UPDATED', this.onGameStateUpdate);
-        stateService.socket.removeListener('ROUND_UPDATED', this.onRoundUpdated);
-    }
-
-    renderRoundIndicator() {
-        return this.state.hasStarted ? (
-            <div>
-                <h3>Cool Title</h3>
-                <p></p>
-            </div>
-        ) : null
 
     }
 
@@ -110,7 +107,7 @@ export default class Room extends React.Component {
                 <div>
                     {this.state.currentPlayerId && !this.state.gameStartDate ? (<button onClick={this.onStartGameClick}>Start Game</button>) : undefined}
                 </div>
-                {this.renderRoundIndicator()}
+                {this.state.hasStarted ? <RoundContainer currentPlayerId={this.state.currentPlayerId} roundInfo={this.getRoundInfo()}/> : null}
             </div>
         )
     }
