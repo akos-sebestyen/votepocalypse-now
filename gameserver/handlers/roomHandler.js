@@ -56,9 +56,9 @@ module.exports = class RoomHandler{
             return;
         }
 
-        this.room.game.postApplyCb = (action) => {
+        this.room.game.subscribe('notify-client', (action) => {
             this.emitToRoom('GAME_STATE_UPDATED', action);
-        };
+        });
 
         console.log(`${this.player.playerName} wants to start the game`);
         this.room.game.startGame();

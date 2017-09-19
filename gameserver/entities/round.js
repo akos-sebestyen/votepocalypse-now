@@ -2,7 +2,7 @@ const BaseEntity = require("./baseEntity");
 
 class Round extends BaseEntity {
 
-    constructor(onRoundUpdate, startDelay, roundLengthMs){
+    constructor(startDelay){
         const defaultState = {
             askingPlayerId: null,
             roundStartDate: null,
@@ -12,13 +12,12 @@ class Round extends BaseEntity {
             option2: null
         };
 
-        super(defaultState, onRoundUpdate);
+        super(defaultState);
 
         this._voteMap = new Map();
         this._votersSet = null;
 
         this._startDelay = startDelay || 5000;
-        this._roundLengthMs = roundLengthMs || 30000;
     }
 
     startRound(askingPlayerId, restOfPlayers, cb) {

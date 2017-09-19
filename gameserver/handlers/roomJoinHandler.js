@@ -1,7 +1,7 @@
 const rooms = require('../rooms');
 const roomGenerator = require('../roomGenerator');
 const Room = require('../entities/room');
-const Player = require('../player');
+const Player = require('../entities/player');
 const Game = require('../entities/game');
 const RoomHandler = require('./roomHandler');
 

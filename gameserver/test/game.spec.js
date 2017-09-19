@@ -9,7 +9,7 @@ describe('Game', function() {
     let game;
 
     beforeEach(() => {
-        game = new Game(undefined, 50);
+        game = new Game(50);
     });
 
     it('begin with an empty game state', () => {
@@ -46,6 +46,8 @@ describe('Game', function() {
         const spy = sinon.spy(onAction);
 
         game = new Game(spy, 50);
+
+        game.subscribe('spy-cb', spy);
 
         game.startGame(() => {
             expect(spy).to.have.been.calledTwice;

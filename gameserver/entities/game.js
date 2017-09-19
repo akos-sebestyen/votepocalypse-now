@@ -3,7 +3,7 @@ const Round = require('./round');
 
 class Game extends BaseEntity {
 
-    constructor(onGameStateUpdateCb, gameStartDelay){
+    constructor(gameStartDelay){
         const rounds = [new Round(), new Round()];
         const defaultState = {
             rounds,
@@ -12,9 +12,9 @@ class Game extends BaseEntity {
             gameStartDate: null
         };
 
-        super(defaultState, onGameStateUpdateCb);
+        super(defaultState);
 
-        this._startDelay  = gameStartDelay || 15000;
+        this._startDelay  = gameStartDelay || 5000;
 
         this.state = Object.assign({}, this._defaultState);
     }

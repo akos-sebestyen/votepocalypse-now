@@ -36,6 +36,8 @@ describe('Round', function() {
 
         round = new Round(spyCb, 5, 5);
 
+        round.subscribe('spy-sub', spyCb);
+
         round.startRound(askingPlayerId, votingPlayerIds);
     };
 
