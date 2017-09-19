@@ -8,8 +8,11 @@ describe('Game', function() {
 
     let game;
 
+    let mockRounds;
+
     beforeEach(() => {
-        game = new Game(50);
+        mockRounds = [{id:"1"}, {id:"2"}];
+        game = new Game(mockRounds, 50);
     });
 
     it('begin with an empty game state', () => {
@@ -45,7 +48,7 @@ describe('Game', function() {
 
         const spy = sinon.spy(onAction);
 
-        game = new Game(spy, 50);
+        game = new Game(mockRounds, 50);
 
         game.subscribe('spy-cb', spy);
 

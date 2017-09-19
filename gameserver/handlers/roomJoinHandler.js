@@ -3,6 +3,7 @@ const roomGenerator = require('../roomGenerator');
 const Room = require('../entities/room');
 const Player = require('../entities/player');
 const Game = require('../entities/game');
+const Round = require('../entities/round');
 const RoomHandler = require('./roomHandler');
 
 module.exports = class RoomJoinHandler{
@@ -36,9 +37,17 @@ module.exports = class RoomJoinHandler{
 
         this.socket.join(roomId);
 
-        const game = new Game();
+        const rounds = [];
+
+        for(let i = 0; i < 4; i++){
+            const round = new Round();
+            rounds.push(round);
+        }
+
+        const game = new Game(rounds);
         const room = new Room(roomId, game);
-        game.room = room;
+
+        rounds.forEach((round) => room.roundStore.set(round.id, round));
 
         rooms[roomId] = room;
         console.log(rooms);

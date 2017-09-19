@@ -1,4 +1,4 @@
-class BaseEntity {
+class BaseStatefulEntity {
     constructor(defaultState) {
         this._defaultState = defaultState;
 
@@ -12,12 +12,14 @@ class BaseEntity {
         return this._eventHistory.slice(0);
     }
 
-    subscribe(subscriptionName, cb) {
+    subscribe(subscriptionName, cb, actionType) {
         if(this._reducerSubscriptions.has(subscriptionName)) {
             throw new Error("there is already a subscription under this name");
         }
 
-        this._reducerSubscriptions.set(subscriptionName, cb);
+        const subscription = { cb, actionType };
+
+        this._reducerSubscriptions.set(subscriptionName, subscription);
     }
 
     unsubscribe(subscriptionName) {
@@ -33,7 +35,10 @@ class BaseEntity {
         const state = this._reducer(this.state, action);
         this.state = state;
         if(this._postApplyCb) this._postApplyCb({type: action.type, state});
-        Array.from(this._reducerSubscriptions.values()).forEach((callback) => callback({type: action.type, state}));
+        Array.from(this._reducerSubscriptions.values()).forEach((subscription) => {
+            if(subscription.actionType && subscription.actionType !== action.type) return;
+            subscription.cb({type: action.type, state});
+        });
     }
 
     resetState() {
@@ -48,4 +53,4 @@ class BaseEntity {
     }
 }
 
-module.exports = BaseEntity;
+module.exports = BaseStatefulEntity;

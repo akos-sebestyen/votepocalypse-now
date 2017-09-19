@@ -1,12 +1,12 @@
-const BaseEntity = require("./baseEntity");
+const BaseEntity = require("./baseStatefulEntity");
 const Round = require('./round');
 
 class Game extends BaseEntity {
 
-    constructor(gameStartDelay){
-        const rounds = [new Round(), new Round()];
+    constructor(rounds, gameStartDelay){
+        const roundIds = rounds.map((round) => round.id);
         const defaultState = {
-            rounds,
+            roundIds,
             roundIndex: null,
             hasStarted: false,
             gameStartDate: null

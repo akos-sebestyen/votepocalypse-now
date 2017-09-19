@@ -49,6 +49,11 @@ export default class Room extends React.Component {
         this.setState(state);
     }
 
+    onRoundUpdated({type, state}){
+        console.log(`Round update:type: ${type}`);
+        console.log(`Round update:state:`, state);
+    }
+
     componentDidMount(){
         if(!this.state.roomId) {
             Router.push('/');
@@ -61,6 +66,7 @@ export default class Room extends React.Component {
         stateService.socket.on('ROOM_NOT_FOUND', this.onRoomNotFound);
         stateService.socket.on('PLAYERS_UPDATED', this.onPlayersUpdated);
         stateService.socket.on('GAME_STATE_UPDATED', this.onGameStateUpdate);
+        stateService.socket.on('ROUND_UPDATED', this.onRoundUpdated);
     }
 
     componentWillUnmount(){
@@ -68,6 +74,7 @@ export default class Room extends React.Component {
         stateService.socket.removeListener('ROOM_NOT_FOUND', this.onRoomNotFound);
         stateService.socket.removeListener('PLAYERS_UPDATED', this.onPlayersUpdated);
         stateService.socket.removeListener('GAME_STATE_UPDATED', this.onGameStateUpdate);
+        stateService.socket.removeListener('ROUND_UPDATED', this.onRoundUpdated);
     }
 
     renderRoundIndicator() {

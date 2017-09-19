@@ -1,4 +1,5 @@
-const BaseEntity = require("./baseEntity");
+const BaseEntity = require("./baseStatefulEntity");
+const uuid = require("uuid/v4");
 
 class Round extends BaseEntity {
 
@@ -13,6 +14,8 @@ class Round extends BaseEntity {
         };
 
         super(defaultState);
+
+        this.id = uuid();
 
         this._voteMap = new Map();
         this._votersSet = null;

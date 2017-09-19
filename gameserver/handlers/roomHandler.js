@@ -1,3 +1,5 @@
+const Game = require("../entities/game");
+
 const rooms = require('../rooms');
 const roomGenerator = require('../roomGenerator');
 
@@ -56,8 +58,24 @@ module.exports = class RoomHandler{
             return;
         }
 
-        this.room.game.subscribe('notify-client', (action) => {
-            this.emitToRoom('GAME_STATE_UPDATED', action);
+        this.room.game.subscribe('on-game-start', ({state}) => {
+            console.log("Game is starting", state);
+
+            const currentRoundId = state.roundIds[state.roundIndex];
+
+            const currentRound = this.room.getRound(currentRoundId);
+
+            currentRound.subscribe('notify-client-round', ({type, state}) => {
+                this.emitToRoom('ROUND_UPDATED', {type, state});
+            });
+
+            const otherPlayers = this.room.playersArr.filter((player) => player.id !== this.player.id);
+
+            currentRound.startRound(this.player.id, otherPlayers.map((player) => player.id))
+        }, Game.EventType.START_GAME);
+
+        this.room.game.subscribe('notify-client', ({type, state}) => {
+            this.emitToRoom('GAME_STATE_UPDATED', {type, state});
         });
 
         console.log(`${this.player.playerName} wants to start the game`);
