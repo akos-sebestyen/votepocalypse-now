@@ -36,6 +36,14 @@ AC
     * ✔ refactor to BaseStatefulEntity
     * ✔ build pub/sub to state change events for BaseStatefulEntity
     
+* 0.5.0  
+    * distinguish between question asker and rest of players on the client
+    * question asker should be able to set the question
+    
+* 0.6.0  
+    * once question has been set, allow other players to vote on topics
+    * once vote is complete, determine winning option (and players who voted)
+    
 ## Setup
 ### fe
     $ yarn
