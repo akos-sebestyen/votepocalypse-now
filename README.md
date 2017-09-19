@@ -22,15 +22,21 @@ AC
     
 * 0.3.0  
     * ✔ refactor into handlers
-    * implement start game button that updates game state across all clients
+    * ✔ implement start game button that updates game state across all clients
+
+* 0.4.0  
+    * ✔ implement Round
+    * ✔ write unit tests for Round
+    * ✔ have Round extend same base entity as Game
     
-* 1.0 
-    * TODO: make game
+* 0.4.1  
+    * ✔ refactor to BaseStatefulEntity
+    * ✔ build pub/sub to state change events for BaseStatefulEntity
     
 ## Setup
 ### fe
     $ yarn
-    $ yarn dev
+    $ yarn start
     
 ### gameserver
     $ yarn
