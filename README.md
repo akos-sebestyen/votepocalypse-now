@@ -1,3 +1,6 @@
+## What
+A "would you rather" multiplayer voting game.
+
 ## Why
 I wanted to try socket.io and Next.js for a while so...
 
