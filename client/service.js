@@ -6,7 +6,7 @@ class StateService{
     }
     get socket(){
         if(this._socket) return this._socket;
-        this._socket = io(`${window.location.hostname}:3001`);
+        this._socket = io();
         return this._socket;
     }
 }

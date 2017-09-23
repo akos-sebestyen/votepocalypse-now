@@ -1,6 +1,6 @@
 import React from 'react';
 import Router from 'next/router'
-import stateService from '../service'
+import stateService from '../client/service'
 
 export default class Home extends React.Component {
     constructor(props){

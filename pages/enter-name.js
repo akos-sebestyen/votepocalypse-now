@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import React from 'react';
 import Router from 'next/router'
-import stateService from '../service'
+import stateService from '../client/service'
 
 export default class Create extends React.Component {
     constructor(props){

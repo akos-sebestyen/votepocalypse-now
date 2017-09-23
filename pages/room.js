@@ -1,9 +1,9 @@
 import io from 'socket.io-client';
 import React from 'react';
 import Router from 'next/router'
-import stateService from '../service'
-import GameStartCountdown from '../components/GameStartCountdown';
-import RoundContainer from "../components/RoundContainer";
+import stateService from '../client/service'
+import GameStartCountdown from '../client/components/GameStartCountdown';
+import RoundContainer from "../client/components/RoundContainer";
 
 export default class Room extends React.Component {
     constructor(props){
