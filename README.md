@@ -1,3 +1,6 @@
+## What
+A "would you rather" multiplayer voting game.
+
 ## Why
 I wanted to try socket.io and Next.js for a while so...
 
@@ -22,15 +25,29 @@ AC
     
 * 0.3.0  
     * ✔ refactor into handlers
-    * implement start game button that updates game state across all clients
+    * ✔ implement start game button that updates game state across all clients
+
+* 0.4.0  
+    * ✔ implement Round
+    * ✔ write unit tests for Round
+    * ✔ have Round extend same base entity as Game
     
-* 1.0 
-    * TODO: make game
+* 0.4.1  
+    * ✔ refactor to BaseStatefulEntity
+    * ✔ build pub/sub to state change events for BaseStatefulEntity
+    
+* 0.5.0  
+    * distinguish between question asker and rest of players on the client
+    * question asker should be able to set the question
+    
+* 0.6.0  
+    * once question has been set, allow other players to vote on topics
+    * once vote is complete, determine winning option (and players who voted)
     
 ## Setup
 ### fe
     $ yarn
-    $ yarn dev
+    $ yarn start
     
 ### gameserver
     $ yarn
