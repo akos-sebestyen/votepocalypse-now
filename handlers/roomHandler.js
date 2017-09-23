@@ -11,6 +11,7 @@ module.exports = class RoomHandler{
         this.socket.on('NAME_UPDATED', this.onNameUpdated.bind(this));
         this.socket.on('NAME_CONFIRMED', this.onNameConfirmed.bind(this));
         this.socket.on('REQUEST_GAME_START', this.onRequestGameStart.bind(this));
+        this.socket.on('QUESTION_SET', this.onQuestionSet.bind(this));
     }
 
     get player(){
@@ -39,6 +40,17 @@ module.exports = class RoomHandler{
         player.playerName = name;
         console.log('name updated', roomId, name);
         this.socket.to(roomId).emit('PLAYERS_UPDATED', {players: Array.from(room.players.values())})
+    };
+
+    getCurrentPlayer() {
+        return this.room.players.get[this.socket.id];
+    }
+
+    onQuestionSet({option1, option2}){
+        const currentRound = this.room.getCurrentRound();
+
+        console.log(`${this.getCurrentPlayer().playerName} set options: ${option1},${option2}`);
+        currentRound.setQuestion(option1, option2);
     };
 
     onNameConfirmed({roomId}){

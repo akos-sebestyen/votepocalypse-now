@@ -10,6 +10,11 @@ module.exports = class Room {
         return Array.from(this.players.values());
     }
 
+    getCurrentRound(){
+        const {roundIndex, roundIds} = this.game.state;
+        return this.roundStore.get(roundIds[roundIndex]);
+    }
+
     getRound(roundId){
         return this.roundStore.get(roundId);
     }

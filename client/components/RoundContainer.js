@@ -6,7 +6,6 @@ export default class RoundContainer extends React.Component {
     constructor(props){
         super(props);
         this.onRoundUpdated = this.onRoundUpdated.bind(this);
-        this.renderQuestionForm = this.renderQuestionForm.bind(this);
         this.state = {
             askingPlayerId: null
         }
@@ -27,10 +26,17 @@ export default class RoundContainer extends React.Component {
     }
 
     renderQuestionForm() {
-        if(!this.state.hasStarted) return null;
+        if(!this.state.hasStarted || (this.state.option1 || this.state.option2)) return null;
 
         return this.state.askingPlayerId === this.props.currentPlayerId ?
             <SetQuestionForm/> : <p>Hang tight, someone's thinking really hard</p>
+    }
+
+    renderQuestionDisplay() {
+        const {option1, option2} = this.state;
+        if(!option1 || !option2) return null;
+
+        return <h3>Would you rather {option1} or {option2}?</h3>
     }
 
     render(){
@@ -38,6 +44,7 @@ export default class RoundContainer extends React.Component {
             <h3>Round {this.props.roundInfo.roundIndex + 1} of {this.props.roundInfo.roundIds.length}</h3>
             {!this.state.hasStarted ? <p>Round is starting soon...</p> : null }
             {this.renderQuestionForm()}
+            {this.renderQuestionDisplay()}
         </div>);
     }
 }
