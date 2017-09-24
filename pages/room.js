@@ -3,7 +3,9 @@ import React from 'react';
 import Router from 'next/router'
 import stateService from '../client/service'
 import GameStartCountdown from '../client/components/GameStartCountdown';
+import GameWrapper from '../client/components/GameWrapper';
 import RoundContainer from "../client/components/RoundContainer";
+import Header from "../client/components/Header";
 
 export default class Room extends React.Component {
     constructor(props){
@@ -86,7 +88,9 @@ export default class Room extends React.Component {
 
     render(){
         return (
-            <div>
+            <GameWrapper>
+                <Header/>
+
                 <div>
                     <h3>Room {this.state.roomId}</h3>
                 </div>
@@ -108,7 +112,7 @@ export default class Room extends React.Component {
                     {this.state.currentPlayerId && !this.state.gameStartDate ? (<button onClick={this.onStartGameClick}>Start Game</button>) : undefined}
                 </div>
                 {this.state.hasStarted ? <RoundContainer currentPlayerId={this.state.currentPlayerId} roundInfo={this.getRoundInfo()}/> : null}
-            </div>
+            </GameWrapper>
         )
     }
 }

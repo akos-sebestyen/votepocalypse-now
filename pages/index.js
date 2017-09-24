@@ -1,6 +1,7 @@
 import React from 'react';
 import Router from 'next/router'
 import stateService from '../client/service'
+import Header from '../client/components/Header'
 
 export default class Home extends React.Component {
     constructor(props){
@@ -59,6 +60,7 @@ export default class Home extends React.Component {
     render(){
         return (
             <div>
+                <Header/>
                 <div>
                     <h2>Create Room</h2>
                     <button onClick={this.onCreate}>Create</button>

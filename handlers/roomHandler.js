@@ -48,8 +48,9 @@ module.exports = class RoomHandler{
 
     onQuestionSet({option1, option2}){
         const currentRound = this.room.getCurrentRound();
+        const currentPlayer = this.getCurrentPlayer() || {};
 
-        console.log(`${this.getCurrentPlayer().playerName} set options: ${option1},${option2}`);
+        console.log(`${currentPlayer.playerName} set options: ${option1},${option2}`);
         currentRound.setQuestion(option1, option2);
     };
 
