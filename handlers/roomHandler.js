@@ -12,6 +12,7 @@ module.exports = class RoomHandler{
         this.socket.on('NAME_CONFIRMED', this.onNameConfirmed.bind(this));
         this.socket.on('REQUEST_GAME_START', this.onRequestGameStart.bind(this));
         this.socket.on('QUESTION_SET', this.onQuestionSet.bind(this));
+        this.socket.on('CAST_VOTE', this.onCastVote.bind(this));
     }
 
     get player(){
@@ -43,7 +44,15 @@ module.exports = class RoomHandler{
     };
 
     getCurrentPlayer() {
-        return this.room.players.get[this.socket.id];
+        return this.room.players.get(this.socket.id);
+    }
+
+    onCastVote({vote}) {
+        const currentPlayer = this.getCurrentPlayer();
+        const currentRound = this.room.getCurrentRound();
+        console.log("vote cast", currentPlayer.playerName, vote);
+
+        currentRound.castVote(currentPlayer.playerId, vote);
     }
 
     onQuestionSet({option1, option2}){
@@ -74,11 +83,18 @@ module.exports = class RoomHandler{
         this.room.game.subscribe('on-game-start', ({state}) => {
             console.log("Game is starting", state);
 
-            const currentRoundId = state.roundIds[state.roundIndex];
-
-            const currentRound = this.room.getRound(currentRoundId);
+            const currentRound = this.room.getCurrentRound();
 
             currentRound.subscribe('notify-client-round', ({type, state}) => {
+                const currentRound = this.room.getCurrentRound();
+
+                if(state.hasEnded){
+                    Object.assign(state, {
+                        winningPlayers: currentRound.getWinningPlayers(),
+                        losingPlayers: currentRound.getLosingPlayers(),
+                        winningOption: currentRound.getWinningOption()
+                    });
+                }
                 this.emitToRoom('ROUND_UPDATED', {type, state});
             });
 

@@ -28,9 +28,10 @@ export default class RoundContainer extends React.Component {
     }
 
     renderQuestionForm() {
-        if(!this.state.hasStarted || (this.state.option1 || this.state.option2)) return null;
+        const {hasStarted, option1, option2, askingPlayerId} = this.state;
+        if(!hasStarted || (option1 || option2)) return null;
 
-        return this.state.askingPlayerId === this.props.currentPlayerId ?
+        return askingPlayerId === this.props.currentPlayerId ?
             <SetQuestionForm/> : <p>Hang tight, someone's thinking really hard</p>
     }
 
@@ -46,8 +47,8 @@ export default class RoundContainer extends React.Component {
     }
 
     renderVotingForm() {
-        const {option1, option2} = this.state;
-        if(!option1 || !option2) return null;
+        const {canVote, option1, option2} = this.state;
+        if(!canVote || !option1 || !option2) return null;
 
         return <div className="container centered-flex-item">
             <VotingForm option1={this.state.option1} option2={this.state.option2} castVote={this.castVote}/>
@@ -61,7 +62,6 @@ export default class RoundContainer extends React.Component {
             {this.renderQuestionForm()}
             {this.renderQuestionDisplay()}
 
-            <div></div>
             {/*<h3>Round {this.props.roundInfo.roundIndex + 1} of {this.props.roundInfo.roundIds.length}</h3>*/}
 
             {this.renderVotingForm()}

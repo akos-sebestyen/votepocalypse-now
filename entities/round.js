@@ -9,6 +9,7 @@ class Round extends BaseEntity {
             roundStartDate: null,
             hasStarted: false,
             hasEnded: false,
+            canVote: false,
             option1: null,
             option2: null
         };
@@ -74,7 +75,7 @@ class Round extends BaseEntity {
     }
 
     getWinningOption() {
-        if(!this.state.hasEnded) throw new Error("no winner yet, round has not ended");
+        if(!this.state.hasEnded) return null;
 
         let option1Tally = 0;
         let option2Tally = 0;
@@ -93,7 +94,7 @@ class Round extends BaseEntity {
     }
 
     getWinningPlayers() {
-        if(!this.state.hasEnded) throw new Error("no winner yet, round has not ended");
+        if(!this.state.hasEnded) return null;
 
         const winningOption = this.getWinningOption();
 
@@ -104,7 +105,7 @@ class Round extends BaseEntity {
     }
 
     getLosingPlayers() {
-        if(!this.state.hasEnded) throw new Error("no winner yet, round has not ended");
+        if(!this.state.hasEnded) return null;
 
         const winningOption = this.getWinningOption();
 
