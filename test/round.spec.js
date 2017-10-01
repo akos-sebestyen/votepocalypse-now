@@ -11,7 +11,7 @@ describe('Round', function() {
 
     beforeEach(() => {
         round = new Round();
-        votingPlayerIds = ["player2", "player3", "player4", "player5"];
+        votingPlayerIds = ["player1", "player2", "player3", "player4"];
     });
 
     it('provide a history of round events', () => {
@@ -87,7 +87,7 @@ describe('Round', function() {
         setQuestion(onAction, option1, option2);
     });
 
-    it('set a should begin voting and end when everyone has voted', (cb) => {
+    it('should begin voting and end when everyone has voted', (cb) => {
         const option1 = "eat a hamburger";
         const option2 = "eat a hotdog";
 
@@ -115,6 +115,7 @@ describe('Round', function() {
                 round.castVote(votingPlayerIds[1], "option1");
                 round.castVote(votingPlayerIds[2], "option2");
                 round.castVote(votingPlayerIds[3], "option1");
+                round.castVote(votingPlayerIds[4], "option1");
             }
 
             if (type === Round.EventType.END_VOTING) {
@@ -137,6 +138,7 @@ describe('Round', function() {
                 round.castVote(votingPlayerIds[1], "option1");
                 round.castVote(votingPlayerIds[2], "option2");
                 round.castVote(votingPlayerIds[3], "option1");
+                round.castVote(votingPlayerIds[4], "option1");
             }
 
             if (type === Round.EventType.END_VOTING) {
@@ -158,6 +160,7 @@ describe('Round', function() {
                 round.castVote(votingPlayerIds[1], "option1");
                 round.castVote(votingPlayerIds[2], "option2");
                 round.castVote(votingPlayerIds[3], "option2");
+                round.castVote(votingPlayerIds[4], "option2");
             }
 
             if (type === Round.EventType.END_VOTING) {
@@ -183,6 +186,7 @@ describe('Round', function() {
                 round.castVote(votingPlayerIds[1], "option1");
                 round.castVote(votingPlayerIds[2], "option2");
                 round.castVote(votingPlayerIds[2], "option2");
+                round.castVote(votingPlayerIds[4], "option2");
             }
 
             if (type === Round.EventType.END_VOTING) {
@@ -232,6 +236,7 @@ describe('Round', function() {
 
             if (type === Round.EventType.END_VOTING) {
                 expect(round.getWinningPlayers()).to.have.length(0);
+                expect(round.getWinningOption()).to.eql("tie");
                 expect(round.getLosingPlayers()).to.have.same.members(votingPlayerIds);
                 cb();
             }

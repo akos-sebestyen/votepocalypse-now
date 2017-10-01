@@ -117,7 +117,7 @@ class Round extends BaseEntity {
     _reducer(state, {type, payload}){
         switch(type){
             case Round.EventType.REQUEST_START_ROUND:
-                this._votersSet = new Set(payload.restOfPlayers);
+                this._votersSet = new Set(payload.restOfPlayers.concat([payload.askingPlayerId]));
                 return Object.assign({}, state, {
                     askingPlayerId: payload.askingPlayerId,
                     roundStartDate: payload.roundStartDate
