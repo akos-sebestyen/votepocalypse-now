@@ -2,6 +2,7 @@ import React from 'react';
 import Router from 'next/router'
 import stateService from '../client/service'
 import Header from '../client/components/Header'
+import GameWrapper from "../client/components/GameWrapper";
 
 export default class Home extends React.Component {
     constructor(props){
@@ -59,18 +60,20 @@ export default class Home extends React.Component {
 
     render(){
         return (
-            <div>
+            <GameWrapper>
                 <Header/>
-                <div>
+                <div className="container">
+                <div className="centered-flex-item">
                     <h2>Create Room</h2>
                     <button onClick={this.onCreate}>Create</button>
                 </div>
-                <form onSubmit={this.onSubmit}>
+                <form className="centered-flex-item" onSubmit={this.onSubmit}>
                     <h2>Join room</h2>
                     <input type="text" value={this.state.roomId} onChange={this.onRoomIdInputChange} />
                     <button type="submit">Join</button>
                 </form>
-            </div>
+                </div>
+            </GameWrapper>
         )
     }
 }

@@ -11,33 +11,29 @@ export default class SetQuestionForm extends React.Component {
         this.handleVote = this.handleVote.bind(this);
     }
 
-    handleVote(e) {
-        const {value} = e.target;
-
-        console.log(e.target);
+    handleVote(value) {
         this.props.castVote(value);
 
         this.setState({currentVote: value});
     }
 
     getActiveClass(option) {
-        if(this.state.currentVote !== option) return null;
+        if(this.state.currentVote !== option) return "";
         return "active";
     }
 
     render(){
         return (
-            <div>
-                <button type="button"
-                        value="option1"
-                        onClick={this.handleVote}
-                        className={this.getActiveClass("option1")}
-                >{this.props.option1}</button>
-                <button type="button"
-                        value="option2"
-                        onClick={this.handleVote}
-                        className={this.getActiveClass("option2")}
-                >{this.props.option2}</button>
+            <div className="voting-container">
+                <div id="vote-option-1"
+                     onClick={() => {this.handleVote("option1")}}
+                     className={`vote-option centered-flex-item ${this.getActiveClass("option1")}`}
+                ><h3>{this.props.option1}</h3>
+                </div>
+                <div id="vote-option-2"
+                     onClick={() => this.handleVote("option2")}
+                     className={`vote-option centered-flex-item ${this.getActiveClass("option2")}`}
+                ><h3>{this.props.option2}</h3></div>
             </div>
         )
     }

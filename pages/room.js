@@ -83,7 +83,22 @@ export default class Room extends React.Component {
         stateService.socket.removeListener('ROOM_NOT_FOUND', this.onRoomNotFound);
         stateService.socket.removeListener('PLAYERS_UPDATED', this.onPlayersUpdated);
         stateService.socket.removeListener('GAME_STATE_UPDATED', this.onGameStateUpdate);
+    }
 
+    renderPlayerDisplay() {
+        if(this.state.gameStartDate) return null;
+
+        return <ul>
+            {this.state.players.map((player) => {
+                const itemStyle = {};
+
+                if(this.state.currentPlayerId === player.playerId)
+                    itemStyle.backgroundColor = "#b2cfff";
+                if(!player.hasJoined)
+                    itemStyle.opacity = 0.4;
+                return (<li style={itemStyle} key={player.playerId}>{player.playerName}</li>)
+            })}
+        </ul>
     }
 
     render(){
@@ -91,23 +106,16 @@ export default class Room extends React.Component {
             <GameWrapper>
                 <Header/>
 
-                <div>
-                    <h3>Room {this.state.roomId}</h3>
+                <div className="container room-name-header">
+                    <h3>{this.state.roomId}</h3>
                 </div>
-                <div>
+
+                {this.renderPlayerDisplay()}
+
+                <div className="container">
                     {!this.state.hasStarted ? <GameStartCountdown gameStartDate={this.state.gameStartDate}/> : null}
                 </div>
-                <ul>
-                    {this.state.players.map((player) => {
-                        const itemStyle = {};
 
-                        if(this.state.currentPlayerId === player.playerId)
-                            itemStyle.backgroundColor = "#b2cfff";
-                        if(!player.hasJoined)
-                            itemStyle.opacity = 0.4;
-                        return (<li style={itemStyle} key={player.playerId}>{player.playerName}</li>)
-                    })}
-                </ul>
                 <div>
                     {this.state.currentPlayerId && !this.state.gameStartDate ? (<button onClick={this.onStartGameClick}>Start Game</button>) : undefined}
                 </div>

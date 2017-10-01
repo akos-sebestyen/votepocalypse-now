@@ -2,6 +2,8 @@ import io from 'socket.io-client';
 import React from 'react';
 import Router from 'next/router'
 import stateService from '../client/service'
+import GameWrapper from "../client/components/GameWrapper";
+import Header from "../client/components/Header";
 
 export default class Create extends React.Component {
     constructor(props){
@@ -35,13 +37,16 @@ export default class Create extends React.Component {
 
     render(){
         return (
-            <div>
-                <form onSubmit={this.onSubmit}>
+            <GameWrapper>
+                <Header/>
+                <div className="container">
+                <form className="centered-flex-item" onSubmit={this.onSubmit}>
                     <h2>Enter your name</h2>
                     <input placeholder="Enter your name" value={this.state.name} onChange={this.onNameChange} />
                     <button type="submit">GO!</button>
                 </form>
-            </div>
+                </div>
+            </GameWrapper>
         )
     }
 }
